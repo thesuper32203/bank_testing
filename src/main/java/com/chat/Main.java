@@ -36,6 +36,8 @@ public class Main {
             );
 
             // Put token on client for subsequent calls
+            ApiKeyAuth finicityAppToken = (ApiKeyAuth) client.getAuthentication("FinicityAppToken");
+            finicityAppToken.setApiKey(tokenResp.getToken());
 
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());

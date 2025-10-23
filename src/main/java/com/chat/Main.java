@@ -5,6 +5,7 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.api.AuthenticationApi;
+import org.openapitools.client.api.CustomersApi;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
 import org.openapitools.client.api.AccountValidationAssistanceApi;
@@ -38,6 +39,12 @@ public class Main {
             // Put token on client for subsequent calls
             ApiKeyAuth finicityAppToken = (ApiKeyAuth) client.getAuthentication("FinicityAppToken");
             finicityAppToken.setApiKey(tokenResp.getToken());
+
+            // Create a testing customer (to obtain a customerID)
+            CustomersApi customersApi = new CustomersApi(client);
+            String uniqueUsername = "testuser_" + System.currentTimeMillis();
+            Customer customer = new Customer().id(uniqueUsername).type("testing");
+            System.out.print(customer.getId());
 
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());

@@ -6,6 +6,7 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.api.AuthenticationApi;
 import org.openapitools.client.api.CustomersApi;
+import org.openapitools.client.api.DataConnectApi;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
 import org.openapitools.client.api.AccountValidationAssistanceApi;
@@ -16,6 +17,8 @@ public class Main {
         // basic client + headers
         ApiClient client = Configuration.getDefaultApiClient();
         client.setBasePath("https://api.finicity.com");
+
+
 
 
         // App key is required on ALL calls
@@ -50,31 +53,42 @@ public class Main {
                 .email(uniqueUsername + "@example.com"); // optional but handy
 
             // In sandbox use addTestingCustomer; in prod use addCustomer
-            Customer created = customersApi.addTestingCustomer(newCustomer);
+
+            CreatedCustomer created = customersApi.addTestingCustomer(newCustomer);
             String customerId = created.getId();
-            
+
             System.out.println("Created customerId: " + customerId);
 
             // 4) (Next) Generate a Connect URL for that customer
             //    Class names vary slightly by SDK version; typical pattern below:
-            DataConnectApi dataConnectApi = new DataConnectApi(client);
 
-            ConnectParameters params = new ConnectParameters()
-                .customerId(customerId)
-                .partnerId(partnerId)
-                .redirectUri("https://yourapp.example.com/finicity/callback")
-                .webhook("https://yourapp.example.com/finicity/webhook")
-                // .experience("...") // choose the Connect experience if applicable
-                // .fromDate(...), .singleUse(true), etc., depending on what you need
-                ;
+            ReportCustomField loanField = new ReportCustomField()
+                    .label("loanID")        // must match exactly
+                    .value("LOAN-00123")
+                    .shown(true);
 
-            ConnectUrlResponse link = dataConnectApi.generateConnectUrl(params);
-            System.out.println("Connect URL: " + link.getUrl());
+            ReportCustomField branchField = new ReportCustomField()
+                    .label("branch")
+                    .value("New York")
+                    .shown(false);
 
-            // Send link.getUrl() to the user; after they finish, fetch statements by customerId.
-            System.out.println(link.getUrl());
-            //STILL TESTING UP TO CHANGES
-            
+            DataConnectApi dc = new DataConnectApi(client);
+            ConnectParameters p = new ConnectParameters()
+                    .customerId(customerId)
+                    .partnerId(partnerId)
+                    .addReportCustomFieldsItem(loanField);
+            var l = dc.generateConnectUrl(p);
+            System.out.println("Link: " + l.getLink());
+
+
+            /** LITE LINK
+             * LiteConnectParameters params = new LiteConnectParameters()
+             *                     .customerId(customerId)
+             *                     .partnerId(partnerId)
+             *                     .institutionId((long) 4222);
+             */
+            // var link = dc.generateLiteConnectUrl(params);
+            // System.out.print(link.getLink());
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());
             System.err.println("Error Message: " + e.getResponseBody());

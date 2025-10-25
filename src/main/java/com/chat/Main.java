@@ -33,12 +33,12 @@ public class Main {
 
         // App key is required on ALL calls
         String appKey = getenv("FINICITY_APP_KEY", dotenv);
+        String partnerId = dotenv.get("FINICITY_PARTNER_ID");
+        String partnerSecret = dotenv.get("FINICITY_PARTNER_SECRET");
 
         ApiKeyAuth finicityAppKey = (ApiKeyAuth) client.getAuthentication("FinicityAppKey");
         finicityAppKey.setApiKey(appKey);
 
-        String partnerId = dotenv.get("FINICITY_PARTNER_ID");
-        String partnerSecret = dotenv.get("FINICITY_PARTNER_SECRET");
 
         try{
             // Create a partner token

@@ -2,6 +2,7 @@ package com.chat;
 // Import classes:
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
+import com.chat.service.AuthService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -32,5 +33,14 @@ public class Main {
         EnvConfig cfg = EnvConfig.load(); //reads env + .env
         ApiClient client = FinicityClientFactory.create(cfg);
 
+        AuthService auth = new AuthService(client,cfg);
+
+        try{
+            // create partner token
+            String partnerToken = auth.createPartnerToken();
+            System.out.println("partnerToken: " + partnerToken);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

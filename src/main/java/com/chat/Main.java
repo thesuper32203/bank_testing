@@ -4,19 +4,17 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
-import org.openapitools.client.api.AuthenticationApi;
-import org.openapitools.client.api.CustomersApi;
+import org.openapitools.client.api.*;
 //import org.openapitools.client.api.DataConnectApi;
-import org.openapitools.client.api.ConnectApi;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
-import org.openapitools.client.api.AccountValidationAssistanceApi;
-import org.openapitools.client.api.AccountsApi;
 import org.openapitools.client.model.CustomerAccounts;
-import org.openapitools.client.api.BankStatementsApi;
 
 import java.net.URLClassLoader;
 import java.util.Scanner;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 public class Main {
@@ -25,6 +23,12 @@ public class Main {
         // basic client + headers
         ApiClient client = Configuration.getDefaultApiClient();
         client.setBasePath("https://api.finicity.com");
+
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .setLenient()
+                .create();
+
 
 
 
@@ -86,6 +90,7 @@ public class Main {
                     .customerId(customerId)
                     .partnerId(partnerId)
                     .addReportCustomFieldsItem(loanField);
+
             var l = dc.generateConnectUrl(p);
             System.out.println("Link: " + l.getLink());
 
@@ -103,9 +108,13 @@ public class Main {
             System.out.println("Press ENTER when you're done...");
             new Scanner(System.in).nextLine();
 
-            AccountsApi accountsApi = new AccountsApi(client);
-            CustomerAccounts accounts = accountsApi.getCustomerAccounts(customerId,null,null);
+            //AccountsApi accountsApi = new AccountsApi(client);
+            //CustomerAccounts accounts = accountsApi.getCustomerAccounts(customerId,null,null);
+            //System.out.println(accounts.getAccounts());
 
+            AccountsSimpleApi simpleAccount = new AccountsSimpleApi(client);
+            CustomerAccountsSimple simAcc = simpleAccount.getCustomerAccountsSimple(customerId);
+            System.out.println(simAcc.getAccounts().get(0).getName());
 
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());

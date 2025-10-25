@@ -15,8 +15,9 @@ public class FileStorage {
     public void save(File source, String fileName){
         try{
             if(!Files.exists(baseDir)) Files.createDirectories(baseDir);
-            Files.copy(source.toPath(), baseDir.resolve(fileName));
-            System.out.println("File created");
+            Path target = baseDir.resolve(fileName);
+            Files.copy(source.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Saved: " + target.toAbsolutePath());
         }catch(IOException e){
             throw new RuntimeException("Failed to save file: " + fileName, e);
         }

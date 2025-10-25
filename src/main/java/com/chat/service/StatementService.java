@@ -17,8 +17,11 @@ public class StatementService {
         this.bankStatementsApi = new BankStatementsApi(client);
     }
 
-    public File pathToStatements(String customerId, String accountId)throws ApiException{
-
-        return bankStatementsApi.getCustomerAccountStatement(customerId,accountId,4,"pdf");
+    public List<File> pathToStatements(String customerId, String accountId)throws ApiException{
+        List<File> files = new ArrayList<>();
+        for(int i = 1; i <=4; i++){
+            files.add(bankStatementsApi.getCustomerAccountStatement(customerId,accountId,i,"pdf"));
+        }
+        return files;
     }
 }

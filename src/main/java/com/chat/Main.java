@@ -65,11 +65,16 @@ public class Main {
                 String accountId = account.getId();
                 System.out.println("Account Id: " + accountId);
                 //retrieve all statements for current accuont
-                File statementFiles = statements.pathToStatements(customerId,accountId);
-
+                List<File> statementFilesList = statements.pathToStatements(customerId,accountId);
+                int k = 1;
+                for(File file : statementFilesList){
+                    String filename = "statement_" + accountId + "_" + k + ".pdf";
+                    storage.save(file, filename);
+                    k++;
+                }
                 // save each statement file with account id in the file name
 
-                storage.save(statementFiles, account.getName()+".pdf");
+
 
             }
 

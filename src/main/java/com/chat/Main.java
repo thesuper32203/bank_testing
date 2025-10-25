@@ -3,6 +3,7 @@ package com.chat;
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
 import com.chat.service.*;
+import com.chat.util.FileStorage;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -39,7 +40,7 @@ public class Main {
         ConnectService connectService = new ConnectService(client,cfg);
         AccountsService  accounts = new AccountsService(client);
         StatementService statements = new StatementService(client);
-
+        FileStorage storage = new FileStorage(cfg.getStatementsDir());
         try{
             // 1) create partner token
             String partnerToken = auth.createPartnerToken();
@@ -57,13 +58,23 @@ public class Main {
             new Scanner(System.in).nextLine();
 
             // 4) pull all accounts
-            List<CustomerAccountSimple> accountId = accounts.firstSimpleAccountId(customerId);
-            for(CustomerAccountSimple account : accountId){
-                System.out.println(account.getId());
+            List<CustomerAccountSimple> accountList = accounts.firstSimpleAccountId(customerId);
+            // loop through each account
+
+            for(CustomerAccountSimple account : accountList){
+                String accountId = account.getId();
+                System.out.println("Account Id: " + accountId);
+                //retrieve all statements for current accuont
+                File statementFiles = statements.pathToStatements(customerId,accountId);
+
+                // save each statement file with account id in the file name
+
+                storage.save(statementFiles, account.getName()+".pdf");
+
             }
-            // Get Statement paths
-            List<File> statementFileDir = statements.pathToStatements(customerId, accountId);
-            for(File file : statementFileDir){System.out.println(file);}
+
+
+
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

@@ -17,12 +17,8 @@ public class StatementService {
         this.bankStatementsApi = new BankStatementsApi(client);
     }
 
-    public List<File> pathToStatements(String customerId, List<CustomerAccountSimple> accountIds)throws ApiException{
+    public File pathToStatements(String customerId, String accountId)throws ApiException{
 
-        List<File> files = new ArrayList<>();
-        for(CustomerAccountSimple account: accountIds){
-            files.add(bankStatementsApi.getCustomerAccountStatement(customerId,account.getId(),4,"pdf"));
-        }
-        return files;
+        return bankStatementsApi.getCustomerAccountStatement(customerId,accountId,4,"pdf");
     }
 }

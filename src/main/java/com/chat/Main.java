@@ -6,10 +6,18 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.api.AuthenticationApi;
 import org.openapitools.client.api.CustomersApi;
-import org.openapitools.client.api.DataConnectApi;
+//import org.openapitools.client.api.DataConnectApi;
+import org.openapitools.client.api.ConnectApi;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
 import org.openapitools.client.api.AccountValidationAssistanceApi;
+import org.openapitools.client.api.AccountsApi;
+import org.openapitools.client.model.CustomerAccounts;
+import org.openapitools.client.api.BankStatementsApi;
+
+import java.net.URLClassLoader;
+import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) throws ApiException {
@@ -45,7 +53,7 @@ public class Main {
 
             // Create a testing customer (to obtain a customerID)
             CustomersApi customersApi = new CustomersApi(client);
-            String uniqueUsername = "testuser_" + System.currentTimeMillis();
+            String uniqueUsername = "testuser_" + java.util.UUID.randomUUID();
 
             // Build the proper request payload for creation
              NewCustomer newCustomer = new NewCustomer()
@@ -72,7 +80,8 @@ public class Main {
                     .value("New York")
                     .shown(false);
 
-            DataConnectApi dc = new DataConnectApi(client);
+
+            ConnectApi dc = new ConnectApi(client);
             ConnectParameters p = new ConnectParameters()
                     .customerId(customerId)
                     .partnerId(partnerId)
@@ -89,6 +98,15 @@ public class Main {
              */
             // var link = dc.generateLiteConnectUrl(params);
             // System.out.print(link.getLink());
+
+
+            System.out.println("Press ENTER when you're done...");
+            new Scanner(System.in).nextLine();
+
+            AccountsApi accountsApi = new AccountsApi(client);
+            CustomerAccounts accounts = accountsApi.getCustomerAccounts(customerId,null,null);
+
+
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());
             System.err.println("Error Message: " + e.getResponseBody());

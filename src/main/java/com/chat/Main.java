@@ -3,6 +3,7 @@ package com.chat;
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
 import com.chat.service.AuthService;
+import com.chat.service.CustomerService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -34,11 +35,17 @@ public class Main {
         ApiClient client = FinicityClientFactory.create(cfg);
 
         AuthService auth = new AuthService(client,cfg);
+        CustomerService customerService = new CustomerService(client);
 
         try{
-            // create partner token
+            // 1) create partner token
             String partnerToken = auth.createPartnerToken();
             System.out.println("partnerToken: " + partnerToken);
+
+            // 2) Create a sandbox customer (use .addCustomer for prod)
+            String customerId = customerService.createTestingCustomer();
+            System.out.println("customerId: " + customerId);
+
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

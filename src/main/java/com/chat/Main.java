@@ -11,7 +11,11 @@ import org.openapitools.client.model.*;
 import org.openapitools.client.model.CustomerAccounts;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -26,15 +30,6 @@ public class Main {
         // basic client + headers
         ApiClient client = Configuration.getDefaultApiClient();
         client.setBasePath("https://api.finicity.com");
-
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .setLenient()
-                .create();
-
-
-
-
 
         // App key is required on ALL calls
         String appKey = getenv("FINICITY_APP_KEY", dotenv);
@@ -122,7 +117,24 @@ public class Main {
 
             BankStatementsApi bankStatementsApi = new BankStatementsApi(client);
             File statements = bankStatementsApi.getCustomerAccountStatement(customerId,accountId,4,"pdf");
-            System.out.print(statements.toString());
+            System.out.println(statements.exists());
+
+            // Example: target folder for saving
+            String folderPath = "C:/myapp/statements";   // or "./statements"
+            String fileName = "statement_" + accountId + ".pdf";
+
+            File dir = new File(folderPath);
+            //Define target path
+            Path targetPath = Path.of(folderPath,fileName);
+
+            // Copy file to your directory
+            try{
+                Files.copy(statements.toPath(),targetPath);
+                System.out.println("File created: " + targetPath.toAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
 
         } catch (ApiException e) {

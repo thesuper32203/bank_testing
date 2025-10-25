@@ -22,6 +22,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -57,10 +58,12 @@ public class Main {
             System.out.println("Press ENTER when the user finished linking...");
             new Scanner(System.in).nextLine();
 
-            // 4) pull first account + download last 4 statements as PDF
-            String accountId = accounts.firstSimpleAccountId(customerId);
-            System.out.println("Account Id: " + accountId);
-            //
+            // 4) pull all accounts
+            List<CustomerAccountSimple> accountId = accounts.firstSimpleAccountId(customerId);
+            for(CustomerAccountSimple account : accountId){
+                System.out.println(account.getId());
+            }
+            // Download Statements
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

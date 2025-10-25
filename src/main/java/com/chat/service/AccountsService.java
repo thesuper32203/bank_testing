@@ -3,7 +3,10 @@ package com.chat.service;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.AccountsSimpleApi;
+import org.openapitools.client.model.CustomerAccountSimple;
 import org.openapitools.client.model.CustomerAccountsSimple;
+
+import java.util.List;
 
 public class AccountsService {
     private final AccountsSimpleApi simpleApi;
@@ -12,11 +15,11 @@ public class AccountsService {
         this.simpleApi = new AccountsSimpleApi(client);
     }
 
-    public String firstSimpleAccountId(String customerId) throws ApiException {
+    public List<CustomerAccountSimple> firstSimpleAccountId(String customerId) throws ApiException {
         CustomerAccountsSimple res = simpleApi.getCustomerAccountsSimple(customerId);
         if (res.getAccounts().isEmpty()) {
             throw new IllegalStateException("No accounts found for customer " + customerId);
         }
-        return res.getAccounts().get(0).getId();
+        return res.getAccounts();
     }
 }

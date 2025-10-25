@@ -10,11 +10,14 @@ import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
 import org.openapitools.client.model.CustomerAccounts;
 
+import java.io.File;
 import java.net.URLClassLoader;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import javax.annotation.Nullable;
 
 
 public class Main {
@@ -114,7 +117,13 @@ public class Main {
 
             AccountsSimpleApi simpleAccount = new AccountsSimpleApi(client);
             CustomerAccountsSimple simAcc = simpleAccount.getCustomerAccountsSimple(customerId);
-            System.out.println(simAcc.getAccounts().get(0).getName());
+            String accountId = simAcc.getAccounts().get(0).getId();
+            System.out.println("Account ID: " + accountId);
+
+            BankStatementsApi bankStatementsApi = new BankStatementsApi(client);
+            File statements = bankStatementsApi.getCustomerAccountStatement(customerId,accountId,4,"pdf");
+            System.out.print(statements.toString());
+
 
         } catch (ApiException e) {
             System.err.println("API error: " + e.getCode());

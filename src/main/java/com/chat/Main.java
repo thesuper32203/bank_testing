@@ -1,5 +1,7 @@
 package com.chat;
 // Import classes:
+import com.chat.config.EnvConfig;
+import com.chat.sdk.FinicityClientFactory;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -27,13 +29,8 @@ import javax.annotation.Nullable;
 public class Main {
     public static void main(String[] args) throws ApiException {
 
-    }
-
-    private static String getenv(String key, Dotenv dotenv){
-
-        String v = System.getenv(key);
-        if (v == null && dotenv != null) v = dotenv.get(key);
-        return v;
+        EnvConfig cfg = EnvConfig.load(); //reads env + .env
+        ApiClient client = FinicityClientFactory.create(cfg);
 
     }
 }

@@ -2,10 +2,7 @@ package com.chat;
 // Import classes:
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
-import com.chat.service.AccountsService;
-import com.chat.service.AuthService;
-import com.chat.service.ConnectService;
-import com.chat.service.CustomerService;
+import com.chat.service.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -41,6 +38,7 @@ public class Main {
         CustomerService customerService = new CustomerService(client);
         ConnectService connectService = new ConnectService(client,cfg);
         AccountsService  accounts = new AccountsService(client);
+        StatementService statements = new StatementService(client);
 
         try{
             // 1) create partner token
@@ -63,7 +61,9 @@ public class Main {
             for(CustomerAccountSimple account : accountId){
                 System.out.println(account.getId());
             }
-            // Download Statements
+            // Get Statement paths
+            List<File> statementFileDir = statements.pathToStatements(customerId, accountId);
+            for(File file : statementFileDir){System.out.println(file);}
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

@@ -2,6 +2,7 @@ package com.chat;
 // Import classes:
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
+import com.chat.service.AccountsService;
 import com.chat.service.AuthService;
 import com.chat.service.ConnectService;
 import com.chat.service.CustomerService;
@@ -38,7 +39,7 @@ public class Main {
         AuthService auth = new AuthService(client,cfg);
         CustomerService customerService = new CustomerService(client);
         ConnectService connectService = new ConnectService(client,cfg);
-
+        AccountsService  accounts = new AccountsService(client);
 
         try{
             // 1) create partner token
@@ -52,6 +53,14 @@ public class Main {
             // 3) generate connect URL (user complete auth in browser)
             String connectLink = connectService.generateConnectUrl(customerId);
             System.out.println("Connection link: " + connectLink);
+
+            System.out.println("Press ENTER when the user finished linking...");
+            new Scanner(System.in).nextLine();
+
+            // 4) pull first account + download last 4 statements as PDF
+            String accountId = accounts.firstSimpleAccountId(customerId);
+            System.out.println("Account Id: " + accountId);
+            //
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

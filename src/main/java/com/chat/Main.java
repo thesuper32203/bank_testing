@@ -3,6 +3,7 @@ package com.chat;
 import com.chat.config.EnvConfig;
 import com.chat.sdk.FinicityClientFactory;
 import com.chat.service.AuthService;
+import com.chat.service.ConnectService;
 import com.chat.service.CustomerService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openapitools.client.ApiClient;
@@ -36,6 +37,8 @@ public class Main {
 
         AuthService auth = new AuthService(client,cfg);
         CustomerService customerService = new CustomerService(client);
+        ConnectService connectService = new ConnectService(client,cfg);
+
 
         try{
             // 1) create partner token
@@ -46,6 +49,9 @@ public class Main {
             String customerId = customerService.createTestingCustomer();
             System.out.println("customerId: " + customerId);
 
+            // 3) generate connect URL (user complete auth in browser)
+            String connectLink = connectService.generateConnectUrl(customerId);
+            System.out.println("Connection link: " + connectLink);
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

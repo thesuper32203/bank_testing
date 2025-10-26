@@ -9,7 +9,6 @@ public class FinicityClientFactory {
 
     public static ApiClient create(EnvConfig cfg){
         ApiClient client = Configuration.getDefaultApiClient();
-
         //AppKey header for all calls
         ApiKeyAuth appKey = (ApiKeyAuth) client.getAuthentication("FinicityAppKey");
         appKey.setApiKey(cfg.getAppKey());

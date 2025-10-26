@@ -41,6 +41,7 @@ public class Main {
         AccountsService  accounts = new AccountsService(client);
         StatementService statements = new StatementService(client);
         FileStorage storage = new FileStorage(cfg.getStatementsDir());
+
         try{
             // 1) create partner token
             String partnerToken = auth.createPartnerToken();
@@ -59,7 +60,6 @@ public class Main {
 
             // 4) pull all accounts
             List<CustomerAccountSimple> accountList = accounts.firstSimpleAccountId(customerId);
-            // loop through each account
 
             for(CustomerAccountSimple account : accountList){
                 String accountId = account.getId();
@@ -72,14 +72,7 @@ public class Main {
                     storage.save(file, filename);
                     k++;
                 }
-                // save each statement file with account id in the file name
-
-
-
             }
-
-
-
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

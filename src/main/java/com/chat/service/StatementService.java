@@ -18,6 +18,7 @@ public class StatementService {
     }
 
     public List<File> pathToStatements(String customerId, String accountId)throws ApiException{
+
         List<File> files = new ArrayList<>();
         for(int i = 1; i <=4; i++){
             files.add(bankStatementsApi.getCustomerAccountStatement(customerId,accountId,i,"pdf"));

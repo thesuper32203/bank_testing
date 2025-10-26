@@ -25,7 +25,8 @@ public class ConnectService {
         ConnectParameters p = new ConnectParameters()
                 .customerId(customerId)
                 .partnerId(partnerId)
-                .addReportCustomFieldsItem(loanField);
+                .addReportCustomFieldsItem(loanField)
+                .redirectUri("https://www.wiseadvances.com");
 
         var link = connectApi.generateConnectUrl(p);
         return link.getLink();

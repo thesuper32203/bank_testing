@@ -7,6 +7,7 @@ import org.openapitools.client.auth.ApiKeyAuth;
 
 public class FinicityClientFactory {
 
+
     public static ApiClient create(EnvConfig cfg){
         ApiClient client = Configuration.getDefaultApiClient();
         //AppKey header for all calls

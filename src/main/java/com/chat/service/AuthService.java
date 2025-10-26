@@ -6,7 +6,9 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.AuthenticationApi;
 import org.openapitools.client.model.PartnerCredentials;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
     private final ApiClient client;
     private final EnvConfig cfg;

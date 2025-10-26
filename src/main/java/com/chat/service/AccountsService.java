@@ -5,9 +5,11 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.api.AccountsSimpleApi;
 import org.openapitools.client.model.CustomerAccountSimple;
 import org.openapitools.client.model.CustomerAccountsSimple;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AccountsService {
     private final AccountsSimpleApi simpleApi;
 
